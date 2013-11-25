@@ -20,7 +20,11 @@ def home():
 @route('/new_entry',method="POST")
 def new_entry():
 	f=open("entry.tsv", "a")
-	line = "%s\t%s\t%s\n"%(str(datetime.now()), request.params["username"], request.params["entry"])
+	text = request.params["entry"]
+	username = request.params["username"]
+	text = text.replace("\t", " ")
+	username = username.replace("\t", " ")
+	line = "%s\t%s\t%s\n"%(str(datetime.now()), username, text)
 	f.write(line)
 	redirect("/")
 
