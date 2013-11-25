@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<title>Raul's Happy Place</title>
+		<style type="text/css">
+			.entry{border: thin solid black; width: 300px; margin: 10px}
+			.username{color: red;}
+			.datetime{color: gray;}
+
+		</style>
+	</head>
+	<body>
+		<form action="/new_entry" method="POST">
+							Username <input type="text" name="username"><br>
+							Entry <br><textarea rows="4" cols="40" name="entry"></textarea><br>
+								<input type="submit">
+		</form>
+
+			%for entry in entries:
+				<div class="entry">
+					<span class="username">
+						{{entry["username"].upper()[0]}}{{entry["username"][1:]}}
+
+					</span>
+					<span class="entry_text">
+						{{entry["entry"]}}
+					</span>
+					<span class="datetime">
+						posted at {{entry["datetime"]}}
+					</span>
+				</div>
+
+			%end
+
+	</body>
+</html>
