@@ -24,6 +24,8 @@ def new_entry():
 	username = request.params["username"]
 	text = text.replace("\t", " ")
 	username = username.replace("\t", " ")
+	text = text.replace("\n", " ")
+	username = username.replace("\n", " ")
 	line = "%s\t%s\t%s\n"%(str(datetime.now()), username, text)
 	f.write(line)
 	redirect("/")
