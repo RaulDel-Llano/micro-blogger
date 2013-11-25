@@ -21,6 +21,9 @@ def home():
 def new_entry():
 	f=open("entry.tsv", "a")
 	text = request.params["entry"]
+	if len(text)>140 or len(text)==0:
+		redirect("/")
+		return
 	username = request.params["username"]
 	text = text.replace("\t", " ")
 	username = username.replace("\t", " ")
