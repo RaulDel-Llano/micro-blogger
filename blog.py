@@ -19,7 +19,6 @@ def home():
 
 @route('/new_entry',method="POST")
 def new_entry():
-	f=open("entry.tsv", "a")
 	text = request.params["entry"]
 	if len(text)>140 or len(text)==0:
 		redirect("/")
@@ -29,9 +28,14 @@ def new_entry():
 	username = username.replace("\t", " ")
 	text = text.replace("\n", " ")
 	username = username.replace("\n", " ")
-	line = "%s\t%s\t%s\n"%(str(datetime.now()), username, text)
-	f.write(line)
+	write_entry(username, text, str(datetime.now()))
 	redirect("/")
 
+def write_entry(username, text, datetime):
+	line = "%s\t%s\t%s\n"%(datetime, username, text)
+	f=open("entry.tsv", "a")
+	f.write(line)
+	f.close()
+@route('/')
 
 run(host='0.0.0.0', port=8080, debug=True, reloader=True)
