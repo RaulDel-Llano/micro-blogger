@@ -1,6 +1,6 @@
 from bottle import route, run, template, request, response, view, redirect
 from datetime import datetime
-
+#displays home page
 @route('/')
 @view("home.html")
 def home():
@@ -16,7 +16,7 @@ def home():
 		entries_dicts.append(entry)
 
 	return dict (entries = entries_dicts)
-
+#sanitizes input and saves new entry and redirects the user
 @route('/new_entry',method="POST")
 def new_entry():
 	text = request.params["entry"]
@@ -30,7 +30,7 @@ def new_entry():
 	username = username.replace("\n", " ")
 	write_entry(username, text, str(datetime.now()))
 	redirect("/")
-
+#saves user input
 def write_entry(username, text, datetime):
 	line = "%s\t%s\t%s\n"%(datetime, username, text)
 	f=open("entry.tsv", "a")
