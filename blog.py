@@ -36,6 +36,28 @@ def write_entry(username, text, datetime):
 	f=open("entry.tsv", "a")
 	f.write(line)
 	f.close()
-@route('/')
+#shows login page
+@route('/login')
+@view("login.html")
+def login():
+	return dict(error="")
+#checks for login and password
+@route('/login', method="POST")
+@view("login.html")
+def do_login():
+	username = request.params["username"]
+	password = request.params["password"]
+	f=open("users.tsv", "r")
+	users=f.read().split("\n")
+	users.pop()
+	for line in users:
+		result = line.split("\t")
+		file_username=result[0]
+		file_password=result[1]
+		if file_username==username: 
+			if file_password==password:
+					response.set_cookie('username', username)
+					redirect("/")
+	return dict(error="Invalid username or password")
 
 run(host='0.0.0.0', port=8080, debug=True, reloader=True)
