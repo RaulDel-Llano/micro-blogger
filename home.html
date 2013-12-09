@@ -5,17 +5,25 @@
 			.entry{border: thin solid black; width: 300px; margin: 10px}
 			.username{color: red;}
 			.datetime{color: gray;}
-
+			.top_right{float: right;}
 		</style>
 	</head>
 	<body>
+		%if username:
+		<div class="top_right">
+			<a href="/logout">Log out</a>
+		</div>
+
 		<form action="/new_entry" method="POST">
-							Username <input type="text" name="username"><br>
+							Username {{username}}<br>
 							Entry <br><textarea rows="4" cols="40" name="entry"></textarea><br>
 								<input type="submit">
 		</form>
-
+		%else:
+			<a href="/login">Login</a>
+		%end
 			%for entry in entries:
+
 				<div class="entry">
 					<span class="username">
 						{{entry["username"].upper()[0]}}{{entry["username"][1:]}}
