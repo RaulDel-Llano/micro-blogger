@@ -1,10 +1,10 @@
 from bottle import route, run, template, request, response, view, redirect
 from datetime import datetime
 
-#displays home page
 @route('/')
 @view("home.html")
 def home():
+	"""displays home page"""
 	f=open("entry.tsv", "a+")
 	f.seek(0, 0)
 	entries=f.read().split("\n")
@@ -18,9 +18,9 @@ def home():
 
 	return dict (entries = entries_dicts, username = request.get_cookie("username"))
 
-#sanitizes input and saves new entry and redirects the user
 @route('/new_entry',method="POST")
 def new_entry():
+	"""sanitizes input and saves new entry and redirects the user"""
 	text = request.params["entry"]
 	if len(text)>140 or len(text)==0:
 		redirect("/")
@@ -33,8 +33,8 @@ def new_entry():
 	write_entry(username, text, str(datetime.now()))
 	redirect("/")
 
-#saves user input
 def write_entry(username, text, datetime):
+	"""saves new blog entries to the entry database"""
 	line = "%s\t%s\t%s\n"%(datetime, username, text)
 	f=open("entry.tsv", "a")
 	f.write(line)
@@ -46,10 +46,10 @@ def write_entry(username, text, datetime):
 def login():
 	return dict(error="")
 
-#checks for login and password
 @route('/login', method="POST")
 @view("login.html")
 def do_login():
+	"""checks the login and password against the user database"""
 	username = request.params["username"]
 	password = request.params["password"]
 	f=open("users.tsv", "r")
@@ -65,23 +65,24 @@ def do_login():
 					redirect('/')
 	return dict(error="Invalid username or password")
 
-#logout
 @route('/logout', )
 def logout():
+	"""logs the user out"""
 	response.set_cookie('username', "")
 	redirect('/')
 
 
-#shows signup page
 @route('/signup')
 @view("signup.html")
 def signup():
+	"""shows the signup page"""
 	return dict(error="")
 
-#checks that username is not used and passwords match
 @route('/signup', method="POST")
 @view("signup.html")
 def do_signup():
+	"""checks that username is not used and passwords match;
+	if so, saves the user"""
 	username = request.params["username"]
 	password = request.params["password"]
 	retype_password = request.params["retype_password"]
@@ -89,14 +90,14 @@ def do_signup():
 		return dict(error="Username is already taken try again")
 	if password != retype_password:
 		return dict(error="Passwords don't match")
-	"""if bad_password(password):
-		return dict(error="bad password")"""
+	#if bad_password(password):
+	#	return dict(error="bad password")
 	write_user(username, password)
 	response.set_cookie('username', username)
 	redirect('/')
 
-#checks if username is already taken
 def username_taken(username):
+	"""checks if username is already taken"""
 	f=open("users.tsv", "r")
 	users=f.read().split("\n")
 	users.pop()
@@ -107,8 +108,8 @@ def username_taken(username):
 			return True
 	return False
 
-#
 def write_user(username, password):
+	"""writes a user to the user database"""
 	line = "%s\t%s\n"%(username, password)
 	f=open("users.tsv", "a")
 	f.write(line)
